@@ -28,3 +28,35 @@ GROUP BY
     convenio.nm_convenio   
 ORDER BY 
     Mes_Atend;
+    
+    
+    
+
+-- Radioterapia Particular e Convênio
+SELECT
+    CASE 
+        WHEN atendime.cd_convenio IN ('1', '2') THEN 'SUS'
+        WHEN atendime.cd_convenio = '16' THEN 'Particular'
+        ELSE 'P.Saude'
+    END AS Convenio,
+    SUBSTR(TO_CHAR(atendime.dt_atendimento, 'MONTH'),0,3) AS Mes_Atend,
+    COUNT(atendime.cd_convenio) AS CONT_CONV
+FROM
+    atendime atendime,
+    convenio convenio
+WHERE   
+   atendime.dt_atendimento BETWEEN ( '01/01/2023' ) AND ( '31/03/2023' )
+   AND (atendime.cd_pro_int LIKE ( '4120%' ) OR atendime.cd_pro_int LIKE ( '31602290' ))
+   AND atendime.cd_pro_int LIKE ( '4120%' )
+   AND convenio.cd_convenio = '1'
+GROUP BY 
+    CASE 
+        WHEN atendime.cd_convenio IN ('1', '2') THEN 'SUS'
+        WHEN atendime.cd_convenio = '16' THEN 'Particular'
+        ELSE 'P.Saude'
+    END,
+    SUBSTR(TO_CHAR(atendime.dt_atendimento, 'MONTH'),0,3),
+    convenio.nm_convenio, 
+    atendime.cd_procedimento
+ORDER BY 
+    Mes_Atend;
