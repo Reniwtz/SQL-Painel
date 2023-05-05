@@ -1,3 +1,4 @@
+-- Total de internações SUS, Particular e Convênios
 SELECT
   CASE 
         WHEN atendime.cd_convenio IN ('1', '2') THEN 'SUS'
