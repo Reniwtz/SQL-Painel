@@ -1,18 +1,18 @@
+-- Total de Atendimentos de Urgência SUS, Particular e Convênios
 SELECT
     CASE
         WHEN atendime.cd_convenio IN ( '1', '2' ) THEN 'SUS'
         WHEN atendime.cd_convenio = '16' THEN 'Particular'
         ELSE 'P.Saude'
     END AS Convenio,
-    SUBSTR(TO_CHAR(atendime.dt_atendimento, 'MONTH'),0,3) AS mes_atend,
+    TO_CHAR(atendime.dt_atendimento, 'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE') AS mes_atend,
     COUNT(atendime.cd_convenio) AS Urgência
 FROM
     atendime atendime,
-    convenio convenio,
-    empresa_convenio
+    convenio convenio
+    INNER JOIN empresa_convenio on empresa_convenio.cd_convenio = convenio.cd_convenio
 WHERE
-          empresa_convenio.cd_convenio = convenio.cd_convenio
-    AND trunc(atendime.dt_atendimento) BETWEEN '01/04/2023' AND '30/04/2023'
+        trunc(atendime.dt_atendimento) BETWEEN '01/04/2023' AND '30/04/2023'
     AND dbamv.fnc_mv_usuario_unidade_setor(NULL, NULL, atendime.cd_ori_ate, atendime.cd_leito) = 'S'
     AND atendime.tp_atendimento = 'U'
     AND convenio.cd_convenio = '1'
@@ -22,7 +22,7 @@ GROUP BY
         WHEN atendime.cd_convenio = '16' THEN 'Particular'
         ELSE 'P.Saude'
     END,
-    SUBSTR(TO_CHAR(atendime.dt_atendimento, 'MONTH'),0,3),
+    TO_CHAR(atendime.dt_atendimento, 'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE'),
     convenio.nm_convenio
 ORDER BY
-    mes_atend 
+     TO_DATE(mes_atend, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE');
