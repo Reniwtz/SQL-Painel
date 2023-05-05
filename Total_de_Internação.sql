@@ -4,8 +4,8 @@ SELECT
         WHEN atendime.cd_convenio = '16' THEN 'Particular'
         ELSE 'P.Saude'
     END AS Convenio,
-    SUBSTR(TO_CHAR(atendime.dt_atendimento, 'MONTH'),0,3) AS Mes_Atend,
-    COUNT(atendime.cd_convenio) AS CONT_CONV
+    TO_CHAR(atendime.dt_atendimento, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE') AS Mes_Atend,
+    COUNT(atendime.cd_convenio) AS Internação
 FROM
     atendime atendime,
     convenio convenio,
@@ -21,7 +21,7 @@ GROUP BY
         WHEN atendime.cd_convenio = '16' THEN 'Particular'
         ELSE 'P.Saude'
     END,
-    SUBSTR(TO_CHAR(atendime.dt_atendimento, 'MONTH'),0,3),
+    TO_CHAR(atendime.dt_atendimento, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE'),
     convenio.nm_convenio   
 ORDER BY 
-    Mes_Atend;
+    TO_DATE(mes_atend, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE');
