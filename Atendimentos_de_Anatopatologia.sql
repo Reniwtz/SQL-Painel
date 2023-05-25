@@ -7,19 +7,12 @@ SELECT
     to_char(itped_rx.dt_realizado, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE') AS mes_atend,
     COUNT(ped_rx.cd_convenio) AS ambulatorias
 FROM
-    dbamv.itped_rx,
-    dbamv.exa_rx,
-    dbamv.convenio,
-    dbamv.ped_rx,
-    dbamv.empresa_convenio
+    dbamv.itped_rx
+    INNER JOIN exa_rx ON itped_rx.cd_exa_rx = exa_rx.cd_exa_rx
+    INNER JOIN ped_rx ON itped_rx.cd_ped_rx = ped_rx.cd_ped_rx
+    INNER JOIN convenio ON ped_rx.cd_convenio = convenio.cd_convenio
 WHERE
-        empresa_convenio.cd_convenio = convenio.cd_convenio
-    AND empresa_convenio.cd_multi_empresa = 1
-    AND exa_rx.cd_exa_rx = itped_rx.cd_exa_rx
-    AND itped_rx.cd_ped_rx = ped_rx.cd_ped_rx
-    AND ped_rx.cd_convenio = convenio.cd_convenio
-    AND trunc(ped_rx.dt_pedido) < '01/05/2023'
-    AND trunc(itped_rx.dt_realizado) BETWEEN '01/04/2023' AND '30/04/2023'
+        itped_rx.dt_realizado BETWEEN '01/01/2022' AND '31/12/2022'
     AND ped_rx.cd_set_exa = 13
 GROUP BY
         CASE
@@ -30,3 +23,4 @@ GROUP BY
         to_char(itped_rx.dt_realizado, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE')
 ORDER BY
     TO_DATE(mes_atend, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE');
+    
