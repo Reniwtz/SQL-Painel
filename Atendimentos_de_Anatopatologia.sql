@@ -4,7 +4,7 @@ SELECT
         WHEN ped_rx.cd_convenio = '16' THEN 'Particular'
         ELSE 'P.Saude'
     END AS convenio,
-    to_char(itped_rx.dt_realizado, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE') AS mes_atend,
+    TO_CHAR(itped_rx.dt_realizado, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE') AS mes_atend,
     COUNT(ped_rx.cd_convenio) AS ambulatorias
 FROM
     dbamv.itped_rx
@@ -20,7 +20,7 @@ GROUP BY
             WHEN ped_rx.cd_convenio = '16' THEN 'Particular'
             ELSE 'P.Saude'
         END,
-        to_char(itped_rx.dt_realizado, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE')
+        TO_CHAR(itped_rx.dt_realizado, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE')
 ORDER BY
     TO_DATE(mes_atend, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE');
     
