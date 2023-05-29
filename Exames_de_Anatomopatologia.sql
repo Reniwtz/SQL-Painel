@@ -5,7 +5,7 @@ SELECT
         ELSE 'P.Saude'
     END AS convenio,
     TO_CHAR(itped_rx.dt_realizado, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE') AS mes_atend,
-    COUNT(ped_rx.cd_convenio) AS Anatopatologia
+    COUNT(ped_rx.cd_convenio) AS Anatomopatologia
 FROM
     itped_rx
     INNER JOIN exa_rx ON itped_rx.cd_exa_rx = exa_rx.cd_exa_rx
