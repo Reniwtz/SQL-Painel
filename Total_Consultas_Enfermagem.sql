@@ -5,13 +5,12 @@ SELECT
         ELSE 'P.Saude'
     END AS Convenio,
     TO_CHAR(atendime.dt_atendimento, 'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE') AS mes_atend,
-    COUNT(atendime.cd_convenio) AS Consul_Enfermagem
+    COUNT(CASE WHEN atendime.cd_especialid = '1' THEN 1 ELSE NULL END) AS cont_conv
 FROM
     atendime atendime,
     convenio convenio
 WHERE
-        cd_especialid = '1'
-    AND dt_atendimento >= '01/01/2023'
+        EXTRACT(YEAR FROM dt_atendimento)  = '2023'
     AND convenio.cd_convenio = '1'
 GROUP BY
     CASE 
