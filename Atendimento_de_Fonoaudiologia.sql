@@ -21,4 +21,4 @@ GROUP BY
     TO_CHAR(atendime.dt_atendimento, 'MON','NLS_DATE_LANGUAGE=PORTUGUESE'),
     convenio.nm_convenio   
 ORDER BY 
-    TO_DATE(mes_atend, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE');
+    TO_DATE(mes_atend, 'MON', 'NLS_DATE_LANGUAGE=PORTUGUESE');
