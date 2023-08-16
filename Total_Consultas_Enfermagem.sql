@@ -5,7 +5,7 @@ SELECT
         ELSE 'P.Saude'
     END AS Convenio,
     TO_CHAR(atendime.dt_atendimento, 'MON','NLS_DATE_LANGUAGE=PORTUGUESE') AS mes_atend,
-    COUNT(CASE WHEN atendime.cd_especialid = '1' THEN 1 ELSE NULL END) AS cont_conv
+    COUNT(CASE WHEN atendime.cd_especialid = '1' THEN 1 ELSE NULL END) AS Consulta_Enfermagem
 FROM
     atendime atendime,
     convenio convenio
