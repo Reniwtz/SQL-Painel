@@ -18,7 +18,7 @@ GROUP BY
         WHEN atendime.cd_convenio = '16' THEN 'Particular'
         ELSE 'P.Saude'
     END,
-    TO_CHAR(atendime.dt_atendimento, 'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE'),
+    TO_CHAR(atendime.dt_atendimento, 'MON','NLS_DATE_LANGUAGE=PORTUGUESE'),
     convenio.nm_convenio
 ORDER BY
      TO_DATE(mes_atend, 'MON', 'NLS_DATE_LANGUAGE=PORTUGUESE');
