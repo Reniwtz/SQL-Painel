@@ -4,7 +4,7 @@ SELECT
         WHEN atendime.cd_convenio = '16' THEN 'Particular'
         ELSE 'P.Saude'
     END AS Convenio,
-    TO_CHAR(atendime.dt_atendimento, 'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE') AS mes_atend,
+    TO_CHAR(atendime.dt_atendimento, 'MON','NLS_DATE_LANGUAGE=PORTUGUESE') AS mes_atend,
     COUNT(CASE WHEN atendime.cd_especialid = '1' THEN 1 ELSE NULL END) AS cont_conv
 FROM
     atendime atendime,
@@ -21,4 +21,4 @@ GROUP BY
     TO_CHAR(atendime.dt_atendimento, 'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE'),
     convenio.nm_convenio
 ORDER BY
-     TO_DATE(mes_atend, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE');
+     TO_DATE(mes_atend, 'MON', 'NLS_DATE_LANGUAGE=PORTUGUESE');
