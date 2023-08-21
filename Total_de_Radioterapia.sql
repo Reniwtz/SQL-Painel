@@ -80,7 +80,6 @@ FROM
 WHERE
       convenio.cd_convenio = '1'
     AND atendime.dt_atendimento BETWEEN TO_DATE('01/06/2023', 'DD/MM/YYYY') AND TO_DATE('30/06/2023', 'DD/MM/YYYY')
-    --AND atendime.cd_ori_ate like 14
     AND (cd_tip_mar like 2
          OR cd_tip_mar LIKE 4
          OR cd_tip_mar LIKE 7)
