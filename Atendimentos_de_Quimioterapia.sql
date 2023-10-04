@@ -60,3 +60,26 @@ GROUP BY
     atendime.cd_procedimento
 ORDER BY 
     TO_DATE(mes_atend, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE');
+
+
+
+
+--Código Reformulado
+SELECT
+    procedimento_sus.cd_procedimento,
+    procedimento_sus.ds_procedimento
+FROM
+    atendime atendime,
+    procedimento_sus procedimento_sus
+WHERE
+    dt_atendimento BETWEEN TO_DATE('01/01/2023', 'DD/MM/YYYY') AND TO_DATE('31/01/2023', 'DD/MM/YYYY')
+    AND ( atendime.cd_procedimento LIKE '0304%'
+          OR atendime.cd_procedimento LIKE '304080012'
+          OR atendime.cd_procedimento LIKE '304080071' )
+    AND atendime.cd_procedimento = procedimento_sus.cd_procedimento
+    AND ( procedimento_sus.ds_procedimento LIKE '%QUIMIO%'
+          OR procedimento_sus.ds_procedimento LIKE '%HORMONIOTERAPIA%' )
+GROUP BY
+    procedimento_sus.ds_procedimento, procedimento_sus.cd_procedimento
+ORDER BY
+    procedimento_sus.ds_procedimento
