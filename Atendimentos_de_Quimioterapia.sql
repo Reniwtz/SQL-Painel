@@ -83,3 +83,29 @@ GROUP BY
     procedimento_sus.ds_procedimento, procedimento_sus.cd_procedimento
 ORDER BY
     procedimento_sus.ds_procedimento
+
+
+    
+--Código com a segunda Reformulação  
+SELECT
+    eve_siasus.cd_paciente,
+    procedimento_sus.ds_procedimento
+    --COUNT(cd_paciente)
+FROM
+         eve_siasus eve_siasus
+    INNER JOIN procedimento_sus ON eve_siasus.cd_procedimento = procedimento_sus.cd_procedimento, convenio convenio
+    INNER JOIN empresa_convenio ON empresa_convenio.cd_convenio = convenio.cd_convenio
+WHERE
+        convenio.cd_convenio = '1'
+    AND eve_siasus.dt_eve_siasus BETWEEN TO_DATE('01/10/2023', 'DD/MM/YYYY') AND TO_DATE('31/10/2023', 'DD/MM/YYYY')
+    AND eve_siasus.cd_apac IS NOT NULL
+    AND eve_siasus.qt_lancada >= 1
+    AND eve_siasus.sn_apac_principal = 'S'
+    AND eve_siasus.cd_tip_ate = 29
+    AND NOT ( eve_siasus.cd_procedimento LIKE '0304070017%'
+          OR eve_siasus.cd_procedimento LIKE '0304070025%'
+          OR eve_siasus.cd_procedimento LIKE '0304070041%'
+          OR eve_siasus.cd_procedimento LIKE '0304070050%' 
+          OR eve_siasus.cd_procedimento LIKE '0304070068%'
+          OR eve_siasus.cd_procedimento LIKE '0304070076%'
+          OR eve_siasus.cd_procedimento LIKE '0304080012%');
