@@ -88,9 +88,13 @@ ORDER BY
     
 --Código com a segunda Reformulação  
 SELECT
-    eve_siasus.cd_paciente,
-    procedimento_sus.ds_procedimento
-    --COUNT(cd_paciente)
+    CASE 
+        WHEN eve_siasus.cd_convenio IN ('1', '2') THEN 'SUS'
+        WHEN eve_siasus.cd_convenio = '16' THEN 'Particular'
+        ELSE 'P.Saude'
+    END AS Convenio,
+    TO_CHAR(eve_siasus.dt_eve_siasus, 'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE') AS Mes_Atend,
+    COUNT(qt_lancada) AS Quimioterapia
 FROM
          eve_siasus eve_siasus
     INNER JOIN procedimento_sus ON eve_siasus.cd_procedimento = procedimento_sus.cd_procedimento, convenio convenio
@@ -102,10 +106,20 @@ WHERE
     AND eve_siasus.qt_lancada >= 1
     AND eve_siasus.sn_apac_principal = 'S'
     AND eve_siasus.cd_tip_ate = 29
-    AND NOT ( eve_siasus.cd_procedimento LIKE '0304070017%'
+    AND NOT( eve_siasus.cd_procedimento LIKE '0304070017%'
           OR eve_siasus.cd_procedimento LIKE '0304070025%'
           OR eve_siasus.cd_procedimento LIKE '0304070041%'
           OR eve_siasus.cd_procedimento LIKE '0304070050%' 
           OR eve_siasus.cd_procedimento LIKE '0304070068%'
           OR eve_siasus.cd_procedimento LIKE '0304070076%'
-          OR eve_siasus.cd_procedimento LIKE '0304080012%');
+          OR eve_siasus.cd_procedimento LIKE '0304080012%')
+GROUP BY 
+    CASE 
+        WHEN eve_siasus.cd_convenio IN ('1', '2') THEN 'SUS'
+        WHEN eve_siasus.cd_convenio = '16' THEN 'Particular'
+        ELSE 'P.Saude'
+    END,
+    TO_CHAR(eve_siasus.dt_eve_siasus, 'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE'),
+    convenio.nm_convenio   
+ORDER BY 
+    TO_DATE(mes_atend, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE');
