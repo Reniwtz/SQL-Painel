@@ -147,3 +147,32 @@ WHERE
           OR eve_siasus.cd_procedimento LIKE '0304070076%'
           OR eve_siasus.cd_procedimento LIKE '0304080012%');
 
+
+---------------------------------------------------------------------------------------------------------
+
+SELECT   
+      CASE 
+        WHEN apac.cd_convenio IN ('1', '2') THEN 'SUS'
+        WHEN apac.cd_convenio = '16' THEN 'Particular'
+        ELSE 'P.Saude'
+    END AS Convenio,
+    TO_CHAR(fat_sia.dt_periodo_inicial, 'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE') AS Mes_Atend,
+    COUNT(cd_apac) AS Quimioterapia
+    
+FROM
+         apac apac
+    INNER JOIN fat_sia ON fat_sia.cd_fat_sia = apac.cd_fat_sia
+WHERE
+    fat_sia.tipo_fatura LIKE 'APAC'
+    AND dt_periodo_inicial BETWEEN TO_DATE('01/01/2023', 'DD/MM/YYYY') AND TO_DATE('31/01/2023', 'DD/MM/YYYY')
+    AND cd_ori_ate LIKE 17
+GROUP BY 
+    CASE 
+        WHEN apac.cd_convenio IN ('1', '2') THEN 'SUS'
+        WHEN apac.cd_convenio = '16' THEN 'Particular'
+        ELSE 'P.Saude'
+    END,
+    TO_CHAR(dt_periodo_inicial, 'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE')   
+ORDER BY 
+    TO_DATE(mes_atend, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE');    
+
