@@ -176,3 +176,46 @@ GROUP BY
 ORDER BY 
     TO_DATE(mes_atend, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE');    
 
+------------------------------------------------------------------------------------------------------
+
+WITH meses AS (
+    SELECT TO_CHAR(TO_DATE(level, 'MM'),'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE') AS mes
+    FROM dual
+    CONNECT BY level <= 12
+),
+consulta AS (
+    SELECT   
+        CASE 
+            WHEN apac.cd_convenio IN ('1', '2') THEN 'SUS'
+            WHEN apac.cd_convenio = '16' THEN 'Particular'
+            ELSE 'P.Saude'
+        END AS Convenio,
+        TO_CHAR(fat_sia.dt_periodo_inicial, 'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE') AS Mes_Atend,
+        COUNT(cd_apac) AS Quimioterapia
+    FROM
+        apac apac
+        INNER JOIN fat_sia ON fat_sia.cd_fat_sia = apac.cd_fat_sia
+    WHERE
+        fat_sia.tipo_fatura LIKE 'APAC'
+        AND dt_periodo_inicial BETWEEN TO_DATE('01/01/2023', 'DD/MM/YYYY') AND TO_DATE('31/12/2023', 'DD/MM/YYYY')
+        AND cd_ori_ate LIKE 17
+    GROUP BY 
+        CASE 
+            WHEN apac.cd_convenio IN ('1', '2') THEN 'SUS'
+            WHEN apac.cd_convenio = '16' THEN 'Particular'
+            ELSE 'P.Saude'
+        END,
+        TO_CHAR(dt_periodo_inicial, 'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE')
+)
+SELECT 
+    d.Convenio,
+    m.mes,
+    COALESCE(c.Quimioterapia, 0) AS Quimioterapia
+FROM 
+    meses m
+    CROSS JOIN (SELECT DISTINCT Convenio FROM consulta) d
+    LEFT JOIN consulta c ON m.mes = c.Mes_Atend AND d.Convenio = c.Convenio
+ORDER BY 
+    d.Convenio,
+    TO_DATE(m.mes, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE');
+
