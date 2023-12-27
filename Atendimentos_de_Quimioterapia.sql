@@ -82,7 +82,7 @@ WHERE
 GROUP BY
     procedimento_sus.ds_procedimento, procedimento_sus.cd_procedimento
 ORDER BY
-    procedimento_sus.ds_procedimento
+    procedimento_sus.ds_procedimento;
 
 
     
