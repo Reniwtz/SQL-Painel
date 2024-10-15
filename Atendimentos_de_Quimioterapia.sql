@@ -34,32 +34,33 @@ ORDER BY
 
 --Quimioterapia Particular e Convênio
 SELECT
-    CASE 
-        WHEN atendime.cd_convenio IN ('1', '2') THEN 'SUS'
-        WHEN atendime.cd_convenio = '16' THEN 'Particular'
-        ELSE 'P.Saude'
-    END AS Convenio,
-    TO_CHAR(atendime.dt_atendimento, 'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE') AS Mes_Atend,
-    COUNT(atendime.cd_convenio) AS Quimioterapia
+    CASE
+        WHEN atendime.cd_convenio IN ( '1', '2' ) THEN
+            'SUS'
+        WHEN atendime.cd_convenio = '16' THEN
+            'Particular'
+        ELSE
+            'P.Saude'
+    END                                                                                     AS convenio,
+    substr(to_char(atendime.dt_atendimento, 'MON', 'NLS_DATE_LANGUAGE = PORTUGUESE'), 0, 3) AS mes_atend,
+    COUNT(atendime.cd_convenio)                                                             AS cont_conv
 FROM
-    atendime atendime,
-    convenio convenio
+    atendime atendime
 WHERE
-    
-   atendime.dt_atendimento BETWEEN ( '01/01/2023' ) AND ( '31/03/2023' )
-   AND atendime.cd_pro_int = '20104294'
-   AND convenio.cd_convenio = '1'
-GROUP BY 
-    CASE 
-        WHEN atendime.cd_convenio IN ('1', '2') THEN 'SUS'
-        WHEN atendime.cd_convenio = '16' THEN 'Particular'
-        ELSE 'P.Saude'
-    END,
-    TO_CHAR(atendime.dt_atendimento, 'MONTH','NLS_DATE_LANGUAGE=PORTUGUESE'),
-    convenio.nm_convenio, 
-    atendime.cd_procedimento
-ORDER BY 
-    TO_DATE(mes_atend, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE');
+        EXTRACT(YEAR FROM atendime.dt_atendimento) = '2024'
+    AND atendime.cd_pro_int = '20104294'
+GROUP BY
+        CASE
+            WHEN atendime.cd_convenio IN ( '1', '2' ) THEN
+                'SUS'
+            WHEN atendime.cd_convenio = '16' THEN
+                'Particular'
+            ELSE
+                'P.Saude'
+        END,
+        substr(to_char(atendime.dt_atendimento, 'MON', 'NLS_DATE_LANGUAGE = PORTUGUESE'), 0, 3)
+ORDER BY
+    mes_atend
 
 
 
