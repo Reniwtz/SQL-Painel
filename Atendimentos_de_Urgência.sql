@@ -1,4 +1,4 @@
--- MÊs
+-- Mês
 SELECT
     CASE
         WHEN atendime.cd_convenio IN ( '1', '2' ) THEN
