@@ -1,25 +1,62 @@
+--Mês
 SELECT
     CASE
-        WHEN ped_rx.cd_convenio IN ( '1', '2' ) THEN 'SUS'
-        WHEN ped_rx.cd_convenio = '16' THEN 'Particular'
-        ELSE 'P.Saude'
-    END AS convenio,
-    to_char(itped_rx.dt_realizado, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE') AS mes_atend,
-    COUNT(ped_rx.cd_convenio) AS ambulatorias
+        WHEN atendime.cd_convenio IN ( '1', '2' ) THEN
+            'SUS'
+        WHEN atendime.cd_convenio = '16' THEN
+            'Particular'
+        ELSE
+            'P.Saude'
+    END                                                                                     AS convenio,
+    substr(to_char(atendime.dt_atendimento, 'MON', 'NLS_DATE_LANGUAGE = PORTUGUESE'), 0, 3) AS mes_atend,
+    COUNT(atendime.cd_convenio)                                                             AS cont_conv,
+    to_number(to_char(atendime.dt_atendimento, 'MM'))                                       AS mes_numero 
 FROM
-    dbamv.itped_rx
-    INNER JOIN exa_rx ON itped_rx.cd_exa_rx = exa_rx.cd_exa_rx
-    INNER JOIN ped_rx ON itped_rx.cd_ped_rx = ped_rx.cd_ped_rx
-    INNER JOIN convenio ON ped_rx.cd_convenio = convenio.cd_convenio
+    atendime atendime
 WHERE
-        itped_rx.dt_realizado BETWEEN '01/04/2023' AND '30/04/2023'
-    AND ped_rx.cd_set_exa = 13
+        atendime.tp_atendimento = 'A'
+    AND atendime.dt_atendimento BETWEEN TO_DATE('01/01/2023', 'DD/MM/YYYY') AND TO_DATE('31/12/2023', 'DD/MM/YYYY')
 GROUP BY
         CASE
-            WHEN ped_rx.cd_convenio IN ( '1', '2' ) THEN 'SUS'
-            WHEN ped_rx.cd_convenio = '16' THEN 'Particular'
-            ELSE 'P.Saude'
+            WHEN atendime.cd_convenio IN ( '1', '2' ) THEN
+                'SUS'
+            WHEN atendime.cd_convenio = '16' THEN
+                'Particular'
+            ELSE
+                'P.Saude'
         END,
-        to_char(itped_rx.dt_realizado, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE')
+        substr(to_char(atendime.dt_atendimento, 'MON', 'NLS_DATE_LANGUAGE = PORTUGUESE'), 0, 3),
+        to_number(to_char(atendime.dt_atendimento, 'MM'))
 ORDER BY
-    TO_DATE(mes_atend, 'MONTH', 'NLS_DATE_LANGUAGE=PORTUGUESE');
+    mes_numero
+
+
+--Ano
+SELECT
+    CASE
+        WHEN atendime.cd_convenio IN ( '1', '2' ) THEN
+            'SUS'
+        WHEN atendime.cd_convenio = '16' THEN
+            'Particular'
+        ELSE
+            'P.Saude'
+    END                                      AS convenio,
+    to_char(atendime.dt_atendimento, 'YYYY') AS ano_atend,
+    COUNT(atendime.cd_convenio)              AS cont_conv
+FROM
+    atendime atendime
+WHERE
+       atendime.tp_atendimento = 'A'
+    AND EXTRACT(YEAR FROM atendime.dt_atendimento) BETWEEN '2006' AND '2024'
+GROUP BY
+        CASE
+            WHEN atendime.cd_convenio IN ( '1', '2' ) THEN
+                'SUS'
+            WHEN atendime.cd_convenio = '16' THEN
+                'Particular'
+            ELSE
+                'P.Saude'
+        END,
+        to_char(atendime.dt_atendimento, 'YYYY')
+ORDER BY
+    ano_atend
