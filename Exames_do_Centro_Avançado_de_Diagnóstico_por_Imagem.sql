@@ -12,7 +12,8 @@ FROM
     INNER JOIN ped_rx ON itped_rx.cd_ped_rx = ped_rx.cd_ped_rx
     INNER JOIN convenio ON ped_rx.cd_convenio = convenio.cd_convenio
 WHERE
-        itped_rx.dt_realizado BETWEEN '01/04/2023' AND '30/04/2023'
+        itped_rx.dt_realizado >= TO_DATE('01/01/2021', 'DD/MM/YYYY')
+    AND itped_rx.dt_realizado < TO_DATE('31/12/2021', 'DD/MM/YYYY') + 1 
     AND (ped_rx.cd_set_exa = 31
          OR ped_rx.cd_set_exa = 32
          OR ped_rx.cd_set_exa = 33)
